@@ -81,6 +81,7 @@ do_compile_class-native() {
 install_alljoyn_core() {
     install -d ${D}/${libdir}
     install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/lib/lib${PN}.* ${D}/${libdir}
+    install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/lib/libajrouter.* ${D}/${libdir}
 }
 
 install_alljoyn_core_dev() {
@@ -88,9 +89,6 @@ install_alljoyn_core_dev() {
     install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/inc/${PN}/*.h ${D}/${includedir}/${PN}
     install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/inc/qcc/*.h ${D}/${includedir}/qcc
     install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/inc/qcc/posix/*.h ${D}/${includedir}/qcc/posix
-
-    install -d ${D}/${libdir}
-    install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/lib/libajrouter.* ${D}/${libdir}
 }
 
 install_alljoyn_core_docs() {
@@ -207,11 +205,11 @@ FILES_${PN}-dbg = " \
                   "
 FILES_${PN}-staticdev = " \
                           ${libdir}/lib${PN}.a \
+                          ${libdir}/libajrouter.a \
                         "
 FILES_${PN}-dev = " \
                     ${includedir}/${PN}/* \
                     ${includedir}/qcc/* \
-                    ${libdir}/libajrouter.a \
                   "
 FILES_${PN}-docs = " \
                      ${docdir}/* \
@@ -339,9 +337,11 @@ FILES_${PN}-services-samples-dbg = " \
                                      ${ALLJOYN_BINDIR}/.debug/ACServerSample \
                                    "
 
+RDEPENDS_${PN}-dev += "${PN}-staticdev"
 RDEPENDS_${PN}-bin += "${PN}"
 RDEPENDS_${PN}-samples += "${PN}"
 RDEPENDS_${PN}-services += "${PN}"
+RDEPENDS_${PN}-services-dev += "${PN}-services-staticdev"
 RDEPENDS_${PN}-services-samples += "${PN} ${PN}-services"
 RDEPENDS_${PN}-core-test += "${PN}"
 DEPENDS += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "gtest", "", d)}"
