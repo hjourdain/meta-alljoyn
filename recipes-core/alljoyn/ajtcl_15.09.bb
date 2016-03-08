@@ -37,10 +37,11 @@ PACKAGES = " \
 do_compile() {
 # For _class-target and _class-nativesdk
     export CROSS_PREFIX="${TARGET_PREFIX}"
-    export CROSS_PATH="${STAGING_DIR_NATIVE}${prefix_native}/bin/${TUNE_PKGARCH}${HOST_VENDOR}-${HOST_OS}"
-    export CROSS_CFLAGS="${CFLAGS}"
-    export CROSS_LINKFLAGS="${LDFLAGS}"
-    export 
+    export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${HOST_SYS}"
+    CROSS_CFLAGS=`echo ${CC} | sed -e "s/${CROSS_PREFIX}gcc[ ]*//"`
+    export CROSS_CFLAGS="${CROSS_CFLAGS} ${CFLAGS}"
+    CROSS_LINKFLAGS=`echo ${LD} | sed -e "s/${CROSS_PREFIX}ld[ ]*//"`
+    export CROSS_LINKFLAGS="${CROSS_LINKFLAGS} ${LDFLAGS}"
     cd ${S}/core/${PN}
     scons TARG=linux WS=off GTEST_DIR=${STAGING_DIR_HOST}/${prefix}
     if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then
@@ -54,7 +55,6 @@ do_compile() {
 }
 
 do_compile_class-native() {
-    export 
     cd ${S}/core/${PN}
     scons TARG=linux WS=off GTEST_DIR=${STAGING_DIR_NATIVE}/${prefix}/src/gtest
     if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then

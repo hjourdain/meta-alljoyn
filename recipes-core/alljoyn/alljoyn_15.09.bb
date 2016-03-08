@@ -51,13 +51,12 @@ do_compile() {
     export TARGET_CXX="${CXX}"
     export TARGET_CFLAGS="${CFLAGS}"
     export TARGET_CPPFLAGS="${CPPFLAGS}"
-    export TARGET_PATH="${PATH}:${STAGING_DIR_NATIVE}${prefix_native}/bin/${TUNE_PKGARCH}${HOST_VENDOR}-${HOST_OS}"
+    export TARGET_PATH="${PATH}:${STAGING_BINDIR_NATIVE}/${HOST_SYS}"
     export TARGET_LINKFLAGS="${LDFLAGS}"
     export TARGET_LINK="${CCLD}"
     export TARGET_AR="${AR}"
     export TARGET_RANLIB="${RANLIB}"
     export STAGING_DIR="${STAGING_DIR_TARGET}"
-    export 
     cd ${S}/core/${PN}
     scons OS=openwrt CPU=openwrt DOCS=html CRYPTO=openssl BINDINGS=${ALLJOYN_BINDINGS} ${ALLJOYN_BUILD_OPTIONS} OE_BASE=/usr WS=off VARIANT=debug
     unset TARGET_CC
@@ -73,7 +72,6 @@ do_compile() {
 }
 
 do_compile_class-native() {
-    export 
     cd ${S}/core/${PN}
     scons DOCS=html CRYPTO=openssl BINDINGS=${ALLJOYN_BINDINGS} ${ALLJOYN_BUILD_OPTIONS_NATIVE} OE_BASE=/usr WS=off VARIANT=debug
 }
