@@ -8,20 +8,16 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e
 
 S = "${WORKDIR}/${PN}"
 SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=${S}/core/${PN} \
-          "
-SRC_URI += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", 'git://git.allseenalliance.org/gerrit/services/base.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base', "", d)}"
+           git://git.allseenalliance.org/gerrit/services/base.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base"
 SRCREV = "${AUTOREV}"
 
-ALLJOYN_BINDINGS = "cpp"
-ALLJOYN_SERVICES = "config,controlpanel,notification,onboarding,time,audio"
-ALLJOYN_BINDIR = "/opt/${PN}/bin"
-ALLJOYN_TSTDIR = "/opt/${PN}/test"
+ALLJOYN_BINDINGS ?= "cpp"
+ALLJOYN_SERVICES ?= "config,controlpanel,notification,onboarding,time,audio"
+ALLJOYN_BINDIR ?= "/opt/${PN}/bin"
 
-ALLJOYN_BUILD_OPTIONS += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "GTEST_DIR=${STAGING_DIR_HOST}/${prefix}/src/gtest", "", d)}"
-ALLJOYN_BUILD_OPTIONS += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "SERVICES=${ALLJOYN_SERVICES}", "", d)}"
+ALLJOYN_BUILD_OPTIONS += "SERVICES=${ALLJOYN_SERVICES}"
 
-ALLJOYN_BUILD_OPTIONS_NATIVE += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "GTEST_DIR=${STAGING_DIR_NATIVE}/${prefix}/src/gtest", "", d)}"
-ALLJOYN_BUILD_OPTIONS_NATIVE += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "SERVICES=${ALLJOYN_SERVICES}", "", d)}"
+ALLJOYN_BUILD_OPTIONS_NATIVE += "SERVICES=${ALLJOYN_SERVICES}"
 
 inherit scons
 
@@ -41,8 +37,6 @@ PACKAGES = " \
              ${PN}-staticdev \
              ${PN}-dev \
              ${PN}-docs \
-             ${PN}-core-test-dbg \
-             ${PN}-core-test \
            "
 
 do_compile() {
@@ -91,7 +85,7 @@ install_alljoyn_core_dev() {
 
 install_alljoyn_core_docs() {
     install -d ${D}/${docdir}/${PN}
-    install ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/docs/* ${D}/${docdir}/${PN}
+    cp -r ${S}/core/${PN}/build/openwrt/openwrt/debug/dist/cpp/docs/* ${D}/${docdir}/${PN}
 }
 
 install_alljoyn_core_bin() {
@@ -110,11 +104,6 @@ install_alljoyn_core_samples() {
             install ${i} ${D}/${ALLJOYN_BINDIR}
         fi
     done
-}
-
-install_alljoyn_core_test() {
-    install -d ${D}/${ALLJOYN_TSTDIR}
-    cp -r ${S}/core/${PN}/build/openwrt/openwrt/debug/test/cpp/bin/* ${D}/${ALLJOYN_TSTDIR}
 }
 
 install_alljoyn_services() {
@@ -159,37 +148,13 @@ install_alljoyn_services_samples() {
 }
 
 do_install() {
-    if ${@bb.utils.contains('IMAGE_INSTALL', '${PN}', 'true', 'false', d)}; then
-        install_alljoyn_core
-    fi
-
-    if ${@bb.utils.contains('IMAGE_INSTALL', '${PN}-dev', 'true', 'false', d)}; then
-        install_alljoyn_core_dev
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-docs", "true", "false", d)}; then
-        install_alljoyn_core_docs
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-bin", "true", "false", d)}; then
-        install_alljoyn_core_bin
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-samples", "true", "false", d)}; then
-        install_alljoyn_core_samples
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "true", "false", d)}; then
-        install_alljoyn_core_test
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then
-        install_alljoyn_services
-    fi
-
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services-samples", "true", "false", d)}; then
-        install_alljoyn_services_samples
-    fi
+    install_alljoyn_core
+    install_alljoyn_core_dev
+    install_alljoyn_core_docs
+    install_alljoyn_core_bin
+    install_alljoyn_core_samples
+    install_alljoyn_services
+    install_alljoyn_services_samples
 }
 
 FILES_${PN} = " \
@@ -244,15 +209,6 @@ FILES_${PN}-samples-dbg = " \
                             ${ALLJOYN_BINDIR}/.debug/SecureDoorConsumer \
                             ${ALLJOYN_BINDIR}/.debug/SecureDoorProvider \
                           "
-
-FILES_${PN}-core-test = " \
-                          ${ALLJOYN_TSTDIR}/* \
-                        "
-FILES_${PN}-core-test-dbg = " \
-                              ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/test \
-                              ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/unit_test \
-                              ${ALLJOYN_TSTDIR}/.debug/* \
-                            "
 
 FILES_${PN}-services = " \
                          ${libdir}/lib${PN}_about.so \
@@ -341,7 +297,5 @@ RDEPENDS_${PN}-samples += "${PN}"
 RDEPENDS_${PN}-services += "${PN}"
 RDEPENDS_${PN}-services-dev += "${PN}-services-staticdev"
 RDEPENDS_${PN}-services-samples += "${PN} ${PN}-services"
-RDEPENDS_${PN}-core-test += "${PN}"
-DEPENDS += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "gtest", "", d)}"
 
 BBCLASSEXTEND = "native nativesdk"

@@ -8,12 +8,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e
 
 S = "${WORKDIR}/alljoyn"
 SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=${S}/core/${PN} \
-          "
-SRC_URI += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", 'git://git.allseenalliance.org/gerrit/services/base_tcl.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base_tcl', "", d)}"
+           git://git.allseenalliance.org/gerrit/services/base_tcl.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base_tcl"
 SRCREV = "${AUTOREV}"
 
-AJTCL_BINDIR = "/opt/ajtcl/bin"
-AJTCL_TSTDIR = "/opt/ajtcl/test"
+AJTCL_BINDIR ?= "/opt/ajtcl/bin"
 
 inherit scons
 
@@ -30,8 +28,6 @@ PACKAGES = " \
              ${PN} \
              ${PN}-staticdev \
              ${PN}-dev \
-             ${PN}-core-test-dbg \
-             ${PN}-core-test \
            "
 
 do_compile() {
@@ -43,11 +39,9 @@ do_compile() {
     CROSS_LINKFLAGS=`echo ${LD} | sed -e "s/${CROSS_PREFIX}ld[ ]*//"`
     export CROSS_LINKFLAGS="${CROSS_LINKFLAGS} ${LDFLAGS}"
     cd ${S}/core/${PN}
-    scons TARG=linux WS=off GTEST_DIR=${STAGING_DIR_HOST}/${prefix}
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then
-        cd ${S}/services/base_tcl
-        scons TARG=linux WS=off AJ_TCL_ROOT=../../core/ajtcl
-    fi
+    scons TARG=linux WS=off
+    cd ${S}/services/base_tcl
+    scons TARG=linux WS=off AJ_TCL_ROOT=../../core/ajtcl
     unset CROSS_PREFIX
     unset CROSS_PATH
     unset CROSS_CFLAGS
@@ -56,11 +50,9 @@ do_compile() {
 
 do_compile_class-native() {
     cd ${S}/core/${PN}
-    scons TARG=linux WS=off GTEST_DIR=${STAGING_DIR_NATIVE}/${prefix}/src/gtest
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then
-        cd ${S}/services/base_tcl
-        scons WS=off AJ_TCL_ROOT=../../core/ajtcl
-    fi
+    scons TARG=linux WS=off
+    cd ${S}/services/base_tcl
+    scons WS=off AJ_TCL_ROOT=../../core/ajtcl
 }
 
 do_install() {
@@ -69,26 +61,15 @@ do_install() {
     install ${S}/core/${PN}/dist/lib/* ${D}/${libdir}
     cp -r ${S}/core/${PN}/dist/include/${PN}/* ${D}/${includedir}/${PN}
 # Install ajtcl samples
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-samples", "true", "false", d)}; then
-        install -d ${D}/${AJTCL_BINDIR}
-        cp -r ${S}/core/${PN}/dist/bin/* ${D}/${AJTCL_BINDIR}
-    fi
-# Install ajtcl tests
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "true", "false", d)}; then
-        install -d ${D}/${AJTCL_TSTDIR}
-        cp -r ${S}/core/${PN}/dist/test/* ${D}/${AJTCL_TSTDIR}
-    fi
+    install -d ${D}/${AJTCL_BINDIR}
+    cp -r ${S}/core/${PN}/dist/bin/* ${D}/${AJTCL_BINDIR}
 # Install base_tcl
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services", "true", "false", d)}; then
-        install -d ${D}/${libdir} ${D}/${includedir}/${PN}
-        install ${S}/services/base_tcl/dist/lib/* ${D}/${libdir}
-        cp -r ${S}/services/base_tcl/dist/include/${PN}/* ${D}/${includedir}/${PN}
-    fi
+    install -d ${D}/${libdir} ${D}/${includedir}/${PN}
+    install ${S}/services/base_tcl/dist/lib/* ${D}/${libdir}
+    cp -r ${S}/services/base_tcl/dist/include/${PN}/* ${D}/${includedir}/${PN}
 # Install base_tcl samples
-    if ${@bb.utils.contains("IMAGE_INSTALL", "${PN}-services-samples", "true", "false", d)}; then
-        install -d ${D}/${AJTCL_BINDIR}
-        install ${S}/services/base_tcl/dist/bin/* ${D}/${AJTCL_BINDIR}
-    fi
+    install -d ${D}/${AJTCL_BINDIR}
+    install ${S}/services/base_tcl/dist/bin/* ${D}/${AJTCL_BINDIR}
 }
 
 FILES_${PN}-services-samples = " \
@@ -113,13 +94,6 @@ FILES_${PN}-services-staticdev = " \
 FILES_${PN}-services-dev = " \
                              ${includedir}/${PN}/services/* \
                            "
-
-FILES_${PN}-core-test = " \
-                          ${AJTCL_TSTDIR}/* \
-                        "
-FILES_${PN}-core-test-dbg = " \
-                              ${AJTCL_TSTDIR}/.debug/* \
-                            "
 
 FILES_${PN}-samples-dbg = " \
                             ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/${PN}/samples/* \
@@ -146,7 +120,5 @@ FILES_${PN}-dev = " \
 RDEPENDS_${PN}-samples += "${PN}"
 RDEPENDS_${PN}-services += "${PN}"
 RDEPENDS_${PN}-services-samples += "${PN} ${PN}-services"
-RDEPENDS_${PN}-core-test += "${PN}"
-DEPENDS += "${@bb.utils.contains("IMAGE_INSTALL", "${PN}-core-test", "gtest", "", d)}"
 
 BBCLASSEXTEND = "native nativesdk"
