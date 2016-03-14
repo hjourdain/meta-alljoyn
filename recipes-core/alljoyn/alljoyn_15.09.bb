@@ -45,7 +45,8 @@ do_compile() {
     export TARGET_CXX="${CXX}"
     export TARGET_CFLAGS="${CFLAGS}"
     export TARGET_CPPFLAGS="${CPPFLAGS}"
-    export TARGET_PATH="${PATH}:${STAGING_BINDIR_NATIVE}/${HOST_SYS}"
+# Path to toolchain already in the PATH variable!
+    export TARGET_PATH="${PATH}"
     export TARGET_LINKFLAGS="${LDFLAGS}"
     export TARGET_LINK="${CCLD}"
     export TARGET_AR="${AR}"
@@ -161,9 +162,9 @@ FILES_${PN} = " \
                 ${libdir}/lib${PN}.so \
               "
 FILES_${PN}-dbg = " \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/build \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/src \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/build/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/src/* \
                     ${libdir}/.debug/lib${PN}.so \
                   "
 FILES_${PN}-staticdev = " \
@@ -181,6 +182,7 @@ FILES_${PN}-bin = " \
                     ${ALLJOYN_BINDIR}/* \
                   "
 FILES_${PN}-bin-dbg = " \
+                        ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/test/* \
                         ${ALLJOYN_BINDIR}/.debug/* \
                       "
 FILES_${PN}-samples = " \
@@ -196,8 +198,8 @@ FILES_${PN}-samples = " \
                         ${ALLJOYN_BINDIR}/SecureDoorProvider \
                       "
 FILES_${PN}-samples-dbg = " \
-                            ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/samples \
-                            ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/router \
+                            ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/samples/* \
+                            ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/${PN}_core/router/* \
                             ${ALLJOYN_BINDIR}/.debug/AboutListener \
                             ${ALLJOYN_BINDIR}/.debug/DeskTopSharedKSClient1 \
                             ${ALLJOYN_BINDIR}/.debug/DeskTopSharedKSClient2 \
@@ -219,9 +221,9 @@ FILES_${PN}-services = " \
                          ${libdir}/lib${PN}_services_common.so \
                        "
 FILES_${PN}-services-dbg = " \
-                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common \
-                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/services \
-                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/services \
+                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common/* \
+                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/services/* \
+                             ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/services/* \
                              ${libdir}/.debug/lib${PN}_about.so \
                              ${libdir}/.debug/lib${PN}_config.so \
                              ${libdir}/.debug/lib${PN}_controlpanel.so \
@@ -271,8 +273,8 @@ FILES_${PN}-services-samples = " \
                                  ${ALLJOYN_BINDIR}/FactoryACServerSample.conf \
                                "
 FILES_${PN}-services-samples-dbg = " \
-                                     ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common \
-                                     ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/services \
+                                     ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/common/* \
+                                     ${prefix}/src/debug/${PN}/${PV}-${PR}/${PN}/core/${PN}/services/* \
                                      ${ALLJOYN_BINDIR}/.debug/AboutClient \
                                      ${ALLJOYN_BINDIR}/.debug/AboutClient_legacy \
                                      ${ALLJOYN_BINDIR}/.debug/AboutService \

@@ -30,7 +30,8 @@ do_compile() {
     export TARGET_CXX="${CXX}"
     export TARGET_CFLAGS="${CFLAGS}"
     export TARGET_CPPFLAGS="${CPPFLAGS}"
-    export TARGET_PATH="${PATH}:${STAGING_BINDIR_NATIVE}/${HOST_SYS}"
+# Path to toolchain already in the PATH variable!
+    export TARGET_PATH="${PATH}"
     export TARGET_LINKFLAGS="${LDFLAGS}"
     export TARGET_LINK="${CCLD}"
     export TARGET_AR="${AR}"
@@ -64,8 +65,12 @@ FILES_${PN} = " \
                 ${ALLJOYN_TSTDIR}/* \
               "
 FILES_${PN}-dbg = " \
-                    ${prefix}/src/debug/alljoyn/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/test \
-                    ${prefix}/src/debug/alljoyn/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/unit_test \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/common/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/build/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/src/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/router/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/unit_test/* \
+                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/services/about/* \
                     ${ALLJOYN_TSTDIR}/.debug/* \
                   "
 

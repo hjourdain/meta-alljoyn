@@ -33,13 +33,18 @@ PACKAGES = " \
 do_compile() {
 # For _class-target and _class-nativesdk
     export CROSS_PREFIX="${TARGET_PREFIX}"
-    export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${HOST_SYS}"
-    CROSS_CFLAGS=`echo ${CC} | sed -e "s/${CROSS_PREFIX}gcc[ ]*//"`
-    export CROSS_CFLAGS="${CROSS_CFLAGS} ${CFLAGS}"
-    CROSS_LINKFLAGS=`echo ${LD} | sed -e "s/${CROSS_PREFIX}ld[ ]*//"`
-    export CROSS_LINKFLAGS="${CROSS_LINKFLAGS} ${LDFLAGS}"
+    if [ -f ${STAGING_BINDIR_NATIVE}/${MULTIMACH_TARGET_SYS}/${TARGET_PREFIX}gcc ]; then
+        export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${MULTIMACH_TARGET_SYS}"
+    elif [ -f ${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${TARGET_PREFIX}gcc ]; then
+        export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${TARGET_SYS}"
+    else
+        bberror "Can't find path to compiler!"
+    fi
+    export CROSS_CFLAGS="${TARGET_CC_ARCH} ${TOOLCHAIN_OPTIONS} ${CFLAGS}"
+    export CROSS_LINKFLAGS="${TARGET_LD_ARCH} ${TOOLCHAIN_OPTIONS} ${LDFLAGS}"
     cd ${S}/core/${PN}
-    scons TARG=linux WS=off
+# GTEST_DIR is required because if gtest framework is present, but GTEST_DIR is not, then it triggers a compilation error!
+    scons TARG=linux WS=off GTEST_DIR=${STAGING_DIR_HOST}/${prefix}
     cd ${S}/services/base_tcl
     scons TARG=linux WS=off AJ_TCL_ROOT=../../core/ajtcl
     unset CROSS_PREFIX
