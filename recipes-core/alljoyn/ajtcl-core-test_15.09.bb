@@ -22,13 +22,8 @@ PACKAGES = " \
 do_compile() {
 # For _class-target and _class-nativesdk
     export CROSS_PREFIX="${TARGET_PREFIX}"
-    if [ -f ${STAGING_BINDIR_NATIVE}/${MULTIMACH_TARGET_SYS}/${TARGET_PREFIX}gcc ]; then
-        export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${MULTIMACH_TARGET_SYS}"
-    elif [ -f ${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${TARGET_PREFIX}gcc ]; then
-        export CROSS_PATH="${STAGING_BINDIR_NATIVE}/${TARGET_SYS}"
-    else
-        bberror "Can't find path to compiler!"
-    fi
+# Path to the cross-compiler is included in the PATH variable set by the OE environment
+    export CROSS_PATH="${PATH}"
     export CROSS_CFLAGS="${TARGET_CC_ARCH} ${TOOLCHAIN_OPTIONS} ${CFLAGS}"
     export CROSS_LINKFLAGS="${TARGET_LD_ARCH} ${TOOLCHAIN_OPTIONS} ${LDFLAGS}"
     cd ${S}/core/ajtcl
