@@ -7,8 +7,8 @@ LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/${PN}"
-SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=${S}/core/${PN} \
-           git://git.allseenalliance.org/gerrit/services/base.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base"
+SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=${PN}/core/${PN} \
+           git://git.allseenalliance.org/gerrit/services/base.git;protocol=https;branch=RB${PV};destsuffix=${PN}/services/base"
 SRCREV = "${AUTOREV}"
 
 ALLJOYN_BINDINGS ?= "cpp"

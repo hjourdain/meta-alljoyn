@@ -7,7 +7,7 @@ LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/alljoyn"
-SRC_URI = "git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;branch=RB${PV};destsuffix=${S}/core/alljoyn"
+SRC_URI = "git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/core/alljoyn"
 SRCREV = "${AUTOREV}"
 
 ALLJOYN_BINDINGS ?= "cpp"

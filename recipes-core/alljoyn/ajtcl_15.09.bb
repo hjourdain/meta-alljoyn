@@ -7,8 +7,8 @@ LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/alljoyn"
-SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=${S}/core/${PN} \
-           git://git.allseenalliance.org/gerrit/services/base_tcl.git;protocol=https;branch=RB${PV};destsuffix=${S}/services/base_tcl"
+SRC_URI = "git://git.allseenalliance.org/gerrit/core/${PN}.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/core/${PN} \
+           git://git.allseenalliance.org/gerrit/services/base_tcl.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/services/base_tcl"
 SRCREV = "${AUTOREV}"
 
 AJTCL_BINDIR ?= "/opt/ajtcl/bin"
