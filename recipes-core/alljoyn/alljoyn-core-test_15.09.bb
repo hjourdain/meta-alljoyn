@@ -1,9 +1,10 @@
 SUMMARY = "Alljoyn framework and SDK by the Allseen Alliance."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
+AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
-DEPENDS = "openssl libxml2 libcap"
 SECTION = "libs"
 LICENSE = "ISC"
+DEPENDS = "openssl libxml2 libcap"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/alljoyn"
@@ -14,7 +15,6 @@ ALLJOYN_BINDINGS ?= "cpp"
 ALLJOYN_TSTDIR ?= "/opt/alljoyn/test"
 
 ALLJOYN_BUILD_OPTIONS += "GTEST_DIR=${STAGING_DIR_HOST}/${prefix}/src/gtest"
-
 ALLJOYN_BUILD_OPTIONS_NATIVE += "GTEST_DIR=${STAGING_DIR_NATIVE}/${prefix}/src/gtest"
 
 inherit scons
@@ -64,15 +64,6 @@ do_install() {
 FILES_${PN} = " \
                 ${ALLJOYN_TSTDIR}/* \
               "
-FILES_${PN}-dbg = " \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/common/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/build/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/src/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/router/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/alljoyn_core/unit_test/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/alljoyn/services/about/* \
-                    ${ALLJOYN_TSTDIR}/.debug/* \
-                  "
 
 RDEPENDS_${PN} += "alljoyn alljoyn-services bash"
 DEPENDS += "gtest"
