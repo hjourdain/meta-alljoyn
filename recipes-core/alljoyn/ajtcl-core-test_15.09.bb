@@ -1,9 +1,10 @@
 SUMMARY = "Alljoyn thin framework and SDK by the Allseen Alliance."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
+AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
-DEPENDS = "openssl libxml2"
 SECTION = "libs"
 LICENSE = "ISC"
+DEPENDS = "openssl libxml2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/alljoyn"
@@ -48,11 +49,6 @@ do_install() {
 FILES_${PN} = " \
                 ${AJTCL_TSTDIR}/* \
               "
-FILES_${PN}-dbg = " \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/ajtcl/test/* \
-                    ${prefix}/src/debug/${PN}/${PV}-${PR}/alljoyn/core/ajtcl/dist/include/ajtcl/* \
-                    ${AJTCL_TSTDIR}/.debug/* \
-                  "
 
 RDEPENDS_${PN} += "ajtcl"
 DEPENDS += "gtest"
