@@ -8,8 +8,9 @@ DEPENDS = "openssl libxml2 libcap"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
 S = "${WORKDIR}/alljoyn"
-SRC_URI = "git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/core/alljoyn \
-           git://git.allseenalliance.org/gerrit/services/base.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/services/base"
+SRC_URI = " \
+            git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/core/alljoyn \
+          "
 SRCREV = "${AUTOREV}"
 
 ALLJOYN_BINDINGS ?= "cpp"
@@ -86,10 +87,12 @@ do_compile_class-native() {
 }
 
 install_alljoyn_services() {
-# About service is always present
-    install -d ${D}/${libdir} ${D}/${includedir}/alljoyn/about
+# ABOUT and CONFIG services are always present
+    install -d ${D}/${libdir} ${D}/${includedir}/alljoyn/about ${D}/${includedir}/alljoyn/config
     install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/lib/liballjoyn_about.* ${D}/${libdir}
+    install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/lib/liballjoyn_config.* ${D}/${libdir}
     install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/inc/alljoyn/about/*.h ${D}/${includedir}/alljoyn/about
+    install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/inc/alljoyn/config/*.h ${D}/${includedir}/alljoyn/config
 # Install other services
     for i in `find ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/ -maxdepth 1 -type d`; do
         if [ "${i}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp" -a \

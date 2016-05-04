@@ -1,4 +1,4 @@
-SUMMARY = "Alljoyn thin framework and SDK by the Allseen Alliance."
+SUMMARY = "Alljoyn thin framework services."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
 AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
@@ -11,14 +11,16 @@ S = "${WORKDIR}/git"
 SRCREV_FORMAT = "basetcl"
 SRCREV_ajtclcore = "4361899010c24a549aa94e837588a96afe0e6f89"
 SRCREV_basetcl = "820016899146caaf7dd3e7d4a062ef22aaa02aa3"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI = " \
             git://git.allseenalliance.org/gerrit/services/base_tcl.git;protocol=https;destsuffix=git/services/base_tcl;name=basetcl \
             git://git.allseenalliance.org/gerrit/core/ajtcl.git;protocol=https;destsuffix=git/core/ajtcl;name=ajtclcore \
+            file://001_ajtcl_services_git_basetcl_add_services_config_lib.patch \
           "
 
 PV = "master+git${SRCPV}"
 
-AJTCL_SERVICES_SAMPLES ?= "NotifConfigSample"
+AJTCL_SERVICES_SAMPLES ?= "ConfigSample ControlleeSample NotifConfigSample NotificationConsumerSample NotificationProducerSample"
 AJTCL_BINDIR ?= "/opt/ajtcl/bin"
 
 inherit scons
@@ -56,10 +58,22 @@ do_compile_class-native() {
 }
 
 do_install() {
+# Install service libraries from core
+    install -d ${D}/${libdir} ${D}/${includedir}/ajtcl
+    install ${S}/core/ajtcl/dist/lib/libajtcl_services* ${D}/${libdir}
+    cp -r ${S}/core/ajtcl/dist/include/ajtcl/services ${D}/${includedir}/ajtcl
 # Install base_tcl
     install -d ${D}/${libdir} ${D}/${includedir}/ajtcl
     install ${S}/services/base_tcl/dist/lib/* ${D}/${libdir}
-    cp -r ${S}/services/base_tcl/dist/include/ajtcl/* ${D}/${includedir}/ajtcl
+    cp -r ${S}/services/base_tcl/dist/include/ajtcl/services ${D}/${includedir}/ajtcl
+# Install service samples from core
+    for i in ${AJTCL_SERVICES_SAMPLES}
+    do
+        if [ -f "${S}/core/ajtcl/dist/bin/services/${i}" ]; then
+            install -d ${D}/${AJTCL_BINDIR}
+            install ${S}/core/ajtcl/dist/bin/services/${i} ${D}/${AJTCL_BINDIR}
+        fi
+    done
 # Install base_tcl samples
     for i in ${AJTCL_SERVICES_SAMPLES}
     do

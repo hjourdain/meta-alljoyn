@@ -7,11 +7,9 @@ LICENSE = "ISC"
 DEPENDS = "openssl libxml2 libcap"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d"
 
-S = "${WORKDIR}/git"
-SRCREV = "059b1370ab33e6f7a4f6cb93e9a1169205484178"
-SRC_URI = "git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;destsuffix=git/core/alljoyn"
-
-PV = "master+git${SRCPV}"
+S = "${WORKDIR}/${PN}"
+SRC_URI = "git://git.allseenalliance.org/gerrit/core/alljoyn.git;protocol=https;branch=RB${PV};destsuffix=alljoyn/core/alljoyn"
+SRCREV = "${AUTOREV}"
 
 ALLJOYN_BINDINGS ?= "cpp"
 ALLJOYN_CORE_BIN ?= " \
@@ -61,7 +59,7 @@ do_compile() {
     export TARGET_CXX="${CXX}"
     export TARGET_CFLAGS="${CFLAGS}"
     export TARGET_CPPFLAGS="${CPPFLAGS}"
-# Path to toolchain already in the path!
+# Path to toolchain already in the PATH variable!
     export TARGET_PATH="${PATH}"
     export TARGET_LINKFLAGS="${LDFLAGS}"
     export TARGET_LINK="${CCLD}"

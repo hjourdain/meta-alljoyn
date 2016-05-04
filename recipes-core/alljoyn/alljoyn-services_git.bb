@@ -1,4 +1,4 @@
-SUMMARY = "Alljoyn framework and SDK by the Allseen Alliance."
+SUMMARY = "Alljoyn framework services."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
 AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
@@ -118,19 +118,24 @@ install_alljoyn_services() {
 }
 
 install_alljoyn_services_samples() {
-    install -d ${D}/${ALLJOYN_BINDIR}
-    install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/bin/samples/AboutClient* ${D}/${ALLJOYN_BINDIR}
-    install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/bin/samples/AboutService* ${D}/${ALLJOYN_BINDIR}
-# Install other services
-    for i in `find ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/ -maxdepth 1 -type d`; do
-        if [ "${i}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp" -a \
-             "${i}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/java" -a \
-             "${i}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/c" -a \
-             "${i}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/js" ]; then
-            if [ -d ${i}/bin ]; then
-                install -d ${D}/${ALLJOYN_BINDIR}
-                install ${i}/bin/* ${D}/${ALLJOYN_BINDIR}
-            fi
+    for i in ${ALLJOYN_SERVICES_SAMPLES}
+    do
+        if [ -f "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/bin/samples/${i}" ]; then
+            install -d ${D}/${ALLJOYN_BINDIR}
+            install ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp/bin/samples/${i} ${D}/${ALLJOYN_BINDIR}
+        else
+            for j in `find ${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/ -maxdepth 1 -type d`;
+            do
+                if [ "${j}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/cpp" -a \
+                     "${j}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/java" -a \
+                     "${j}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/c" -a \
+                     "${j}" != "${S}/core/alljoyn/build/openwrt/openwrt/debug/dist/js" ]; then
+                    if [ -f ${j}/bin/${i} ]; then
+                        install -d ${D}/${ALLJOYN_BINDIR}
+                        install ${j}/bin/${i} ${D}/${ALLJOYN_BINDIR}
+                    fi
+                fi
+            done
         fi
     done
 }

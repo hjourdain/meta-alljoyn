@@ -1,4 +1,4 @@
-SUMMARY = "Alljoyn thin framework and SDK by the Allseen Alliance."
+SUMMARY = "Alljoyn thin framework unit tests."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
 AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"

@@ -60,7 +60,7 @@ do_compile_class-native() {
 do_install() {
 # Install ajtcl core
     install -d ${D}/${libdir} ${D}/${includedir}/${PN}
-    install ${S}/core/${PN}/dist/lib/* ${D}/${libdir}
+    install ${S}/core/${PN}/dist/lib/lib${PN}.* ${D}/${libdir}
     install ${S}/core/${PN}/dist/include/${PN}/*.h ${D}/${includedir}/${PN}
 # Install ajtcl samples
     for i in ${AJTCL_CORE_SAMPLES}

@@ -1,4 +1,4 @@
-SUMMARY = "Alljoyn thin framework and SDK by the Allseen Alliance."
+SUMMARY = "Alljoyn thin framework core."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
 AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
@@ -62,8 +62,8 @@ do_compile_class-native() {
 do_install() {
 # Install ajtcl core
     install -d ${D}/${libdir} ${D}/${includedir}/${PN}
-    install ${S}/core/${PN}/dist/lib/* ${D}/${libdir}
-    cp -r ${S}/core/${PN}/dist/include/${PN}/* ${D}/${includedir}/${PN}
+    install ${S}/core/${PN}/dist/lib/lib${PN}.* ${D}/${libdir}
+    install ${S}/core/${PN}/dist/include/${PN}/*.h ${D}/${includedir}/${PN}
 # Install ajtcl samples
     for i in ${AJTCL_CORE_SAMPLES}
     do

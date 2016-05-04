@@ -1,4 +1,4 @@
-SUMMARY = "Alljoyn thin framework and SDK by the Allseen Alliance."
+SUMMARY = "Alljoyn thin framework services."
 DESCRIPTION = "Alljoyn is an Open Source framework that makes it easy for devices and apps to discover and securely communicate with each other."
 AUTHOR = "Herve Jourdain <herve.jourdain@beechwoods.com>"
 HOMEPAGE = "https://www.allseenalliance.org/"
@@ -55,7 +55,7 @@ do_install() {
 # Install base_tcl
     install -d ${D}/${libdir} ${D}/${includedir}/ajtcl
     install ${S}/services/base_tcl/dist/lib/* ${D}/${libdir}
-    cp -r ${S}/services/base_tcl/dist/include/ajtcl/* ${D}/${includedir}/ajtcl
+    cp -r ${S}/services/base_tcl/dist/include/ajtcl/services ${D}/${includedir}/ajtcl
 # Install base_tcl samples
     for i in ${AJTCL_SERVICES_SAMPLES}
     do
